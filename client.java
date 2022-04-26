@@ -4,6 +4,7 @@ import java.net.*;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
@@ -17,7 +18,7 @@ public class client
 	public static int SECRET_KEY = 0;
 	public static void main(String[] args) throws Exception
 	{
-		String location = "41.6931° N, 72.7639° W"; //CCSU coordinates
+		String location = "41.6931 N, 72.7639 W"; //CCSU coordinates
 		try {
 			Socket s = new Socket("localhost",6666);
 			DataOutputStream dos= new DataOutputStream(s.getOutputStream());
@@ -42,7 +43,8 @@ public class client
 			int gabmodp = ((int) Math.pow(gbmodp, a))%clientP; //creates the key to encrypt location using server's 
 			
 			//String ss_client = Integer.toString(gabmodp);
-			byte[] key = (Integer.toString(gabmodp)).getBytes("UTF-8");
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] key = digest.digest(Integer.toString(gabmodp).getBytes("UTF-8"));
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
 			String encryptedLocation = encrypt(location, secretKeySpec);
 			dos.writeUTF(encryptedLocation+"");//send 4
