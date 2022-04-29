@@ -35,7 +35,9 @@ public class server
 			dos.writeUTF(encrypt(gbmodp+"",client_key));
 			
 			BigInteger gabmodp = gamodp.modPow(b,clientP);
-			byte[] key = gabmodp.toByteArray();
+			byte[] key = new byte[16];
+			for(int i = 0; i < 16;i++)
+				key[i] = gabmodp.toByteArray()[i];
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
 			String ss_client = dis.readUTF();//read 4
 			

@@ -38,7 +38,7 @@ public class client
     		
 			//Client Side
 	        SecureRandom rand = new SecureRandom();
-			BigInteger clientG = BigInteger.probablePrime(128,rand);//random integer?
+			BigInteger clientG = new BigInteger(rand.nextInt(1000)+"");//random integer?
 			BigInteger clientP = BigInteger.probablePrime(128,rand);
 			BigInteger a = new BigInteger(rand.nextInt(1000)+"");
 			
@@ -50,7 +50,10 @@ public class client
 			BigInteger gabmodp = gbmodp.modPow(a, clientP); //creates the key to encrypt location using server's 
 	
 			//String ss_client = Integer.toString(gabmodp);
-			byte[] key = gabmodp.toByteArray();
+			byte[] key = new byte[16];
+			for(int i = 0; i < 16;i++)
+				key[i] = gabmodp.toByteArray()[i];
+			System.out.println(key.length);
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
 			String encryptedLocation = encryptLoc(location, secretKeySpec);
 			dos.writeUTF(encryptedLocation+"");//send 4
